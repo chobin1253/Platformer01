@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator pAni;
-    private bool isGrounded;
+    private bool isGrounded, isInfinity;
 
     // Start is called before the first frame update
     private void Awake()
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Respawn"))
+        if (collision.CompareTag("Respawn") && isInfinity)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -56,5 +56,18 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        if (collision.CompareTag("infinity"))
+        {
+            StartCoroutine(IsInfinity());
+            Destroy(collision.gameObject);
+        }
+    }
+
+    private IEnumerator IsInfinity()
+    {
+        isInfinity = true;
+        yield return new WaitForSeconds(3f);
+        isInfinity = false;
+        yield break;
     }
 }
